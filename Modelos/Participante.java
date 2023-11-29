@@ -11,9 +11,17 @@ public class Participante {
     public Participante(String cpf, String nascimento) {
         this.cpf = cpf;
         this.nascimento = nascimento;
-    }
+    } 
 
-    public int calcularIdade() {
+    public String getCpf() {
+		return cpf;
+	}
+
+	public String getNascimento() {
+		return nascimento;
+	}
+
+	public int calcularIdade() {
         String[] partes = nascimento.split("/");
         int dia = Integer.parseInt(partes[0]);
         int mes = Integer.parseInt(partes[1]);
@@ -26,4 +34,9 @@ public class Participante {
         int anos = periodo.getYears();
         return anos;
     }
+	
+	public ArrayList<Ingresso> getIngressos() {
+		return ingressos;
+	}
+
 }

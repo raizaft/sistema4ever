@@ -2,6 +2,7 @@ package Modelos;
 
 import java.util.ArrayList;
 
+
 public class Evento {
     private int id;
     private String data;
@@ -18,7 +19,23 @@ public class Evento {
         this.preco = preco;
     }
 
-    public boolean lotado() {
+    public int getId() {
+		return id;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public double getPreco() {
+		return preco;
+	}
+
+	public boolean lotado() {
         return ingressos.size() >= getCapacidade();
     }
 
@@ -33,4 +50,27 @@ public class Evento {
     public int getCapacidade() {
         return capacidade;
     }
+    
+    public void adicionar(Ingresso ingresso)    {
+		ingressos.add(ingresso);
+	}
+    
+	public void remover (Ingresso ingresso)  {
+		ingressos.remove(ingresso);
+	}
+
+	public Ingresso localizarIngresso(String codigo) {
+		for(Ingresso i: ingressos)
+			if(i.getCodigo().equals(codigo)) return i; 
+		return null;	
+	}
+	
+	public int obterTotalIngressos()    {
+		return ingressos.size();
+	}
+	
+    public ArrayList<Ingresso> getIngressos() {
+		return ingressos;
+	}
+    
 }
