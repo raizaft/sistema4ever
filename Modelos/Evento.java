@@ -61,13 +61,11 @@ public class Evento {
 
 	public Ingresso localizarIngresso(String codigo) {
 		for(Ingresso i: ingressos)
-			if(i.getCodigo().equals(codigo)) return i; 
+			if(i.getCodigo().equals(codigo)) 
+				return i; 
 		return null;	
 	}
 	
-	public int obterTotalIngressos()    {
-		return ingressos.size();
-	}
 	
     public ArrayList<Ingresso> getIngressos() {
 		return ingressos;
