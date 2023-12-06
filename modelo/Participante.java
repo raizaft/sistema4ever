@@ -1,4 +1,4 @@
-package Modelos;
+package modelo;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.Period;
@@ -31,12 +31,24 @@ public class Participante {
         LocalDate dataAtual = LocalDate.now();
         Period periodo = Period.between(dataNascimento, dataAtual);
 
-        int anos = periodo.getYears();
-        return anos;
+        return periodo.getYears();
     }
 	
 	public ArrayList<Ingresso> getIngressos() {
 		return ingressos;
 	}
 
+    public void adicionarIngresso(Ingresso ingresso) {
+        ingressos.add(ingresso);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Participante{" +
+                "cpf='" + cpf + '\'' +
+                ", nascimento='" + nascimento + '\'' +
+                ", ingressos=" + ingressos.size() +
+                '}';
+    }
 }
