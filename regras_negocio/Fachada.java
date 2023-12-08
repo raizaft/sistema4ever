@@ -102,7 +102,7 @@ public class Fachada {
         });
 
         participante.getIngressos().forEach(ingresso -> {
-            ingresso.getEvento().remover(ingresso);
+            ingresso.getEvento().removerIngresso(ingresso);
             repositorio.remover(ingresso);
         });
 

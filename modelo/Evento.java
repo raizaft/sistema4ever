@@ -34,6 +34,10 @@ public class Evento {
         return preco;
     }
 
+    public int getCapacidade() {
+        return capacidade;
+    }
+
     public boolean lotado() {
         return ingressos.size() >= getCapacidade();
     }
@@ -43,19 +47,29 @@ public class Evento {
     }
 
     public double totalArrecadado() {
-        return ingressos.size() * preco;
+        double valorTotal = 0;
+        for (Ingresso i : ingressos) {
+            valorTotal += i.calcularValor();
+        }
+        return valorTotal;
     }
 
-    public int getCapacidade() {
-        return capacidade;
+    public void adicionarIngresso(Ingresso ingresso) throws Exception {
+        if (!lotado()) 
+            ingressos.add(ingresso);
+        else
+            throw new Exception("Não foi possível criar o ingresso, pois o evento está lotado!");
     }
 
-    public void adicionarIngresso(Ingresso ingresso) {
-        ingressos.add(ingresso);
-    }
-
-    public void remover(Ingresso ingresso) {
+    public void removerIngresso(Ingresso ingresso) {
         ingressos.remove(ingresso);
+    }
+
+    public void apagarTodos() throws Exception {
+        if (quantidadeIngressos() != 0)
+            ingressos.clear();
+        else
+            throw new Exception("O evento não possui nenhum ingresso.")
     }
 
     public Ingresso localizarIngresso(String codigo) {
@@ -71,13 +85,11 @@ public class Evento {
 
     @Override
     public String toString() {
-        return "Evento{" +
-                "id=" + id +
-                ", data='" + data + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", capacidade=" + capacidade +
-                ", preco=" + preco +
-                ", ingressos=" + ingressos.size() +
-                '}';
+        return  "ID: " + id +
+                " | Data: " + data +
+                " | Descricao: " + descricao +
+                " | Capacidade: " + capacidade +
+                " | Preco: " + preco +
+                " | Ingressos: " + ingressos.size();
     }
 }

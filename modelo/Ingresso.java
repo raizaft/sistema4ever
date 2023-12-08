@@ -17,19 +17,19 @@ public class Ingresso {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public Evento getEvento() {
+        return evento;
     }
 
-    public double calcularPreco() {
+    public Participante getParticipante() {
+        return participante;
+    }
+
+    public double calcularValor() {
         double valorIngresso;
         if (participante.calcularIdade() < 18)
             valorIngresso = evento.getPreco() * 0.9;
@@ -45,29 +45,11 @@ public class Ingresso {
         }
     }
 
-    public Evento getEvento() {
-        return evento;
-    }
-
-    public void setEvento(Evento e) {
-        evento = e;
-    }
-
-    public Participante getParticipante() {
-        return participante;
-    }
-
-    public void setParticipante(Participante p) {
-        participante = p;
-    }
-
     @Override
     public String toString() {
-        return "Ingresso{" +
-                "codigo='" + codigo + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", evento=" + evento.getId() +
-                ", participante=" + participante.getCpf() +
-                '}';
+        return  "Código: " + codigo +
+                " | Telefone: " + telefone +
+                " | Evento: " + evento.getId() +
+                " | Participante: " + participante.getCpf();
     }
 }
