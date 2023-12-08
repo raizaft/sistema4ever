@@ -7,106 +7,121 @@ import modelo.Participante;
 import repositorio.Repositorio;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fachada {
-
     private static Repositorio repositorio = new Repositorio();
 
     public static void criarEvento(String data, String descricao, int capacidade, double preco) throws Exception {
         if (capacidade < 2)
-            throw new Exception("A capacidade deve ser no minimo 2");
+            throw new Exception("A capacidade deve ser no minimo 2.");
         if (preco < 0)
-            throw new Exception("O preço do evento deve ser maior ou igual a 0");
+            throw new Exception("O preço do evento deve ser maior ou igual a 0.");
         if (data == null || data.length() == 0){
-            throw new Exception("A data do evento é obrigatória");
+            throw new Exception("A data do evento é obrigatória.");
         } else if (descricao == null || descricao.length() == 0){
-            throw new Exception("A descrição do evento é obrigatória");
+            throw new Exception("A descrição do evento é obrigatória.");
         }
 
         int id = repositorio.gerarId();
-        Evento evento = new Evento(id, data, descricao, capacidade, preco);  // data e descrição obrigatoria?
-        repositorio.adicionar(evento);
+        Evento evento = new Evento(id, data, descricao, capacidade, preco);
+        repositorio.adicionarEvento(evento);
+        repositorio.salvarObjetos();
     }
 
     public static void criarParticipante(String cpf, String nascimento) throws Exception {
         if (cpf.isBlank() || nascimento.isBlank()){
-            throw new Exception("CPF ou Nascimento não informado");
+            throw new Exception("CPF ou data de nascimento não informado.");
         }
         Participante partic = repositorio.localizarParticipante(cpf);
         if (partic != null)
-            throw new Exception("Participante ja existe");
+            throw new Exception("Participante ja está registrado!");
 
         Participante participante = new Participante(cpf, nascimento);
-        repositorio.adicionar(participante);
+        repositorio.adicionarParticipante(participante);
+        repositorio.salvarObjetos();
     }
 
     public static void criarConvidado(String cpf, String nascimento, String empresa) throws Exception {
         if (cpf.isBlank() || nascimento.isBlank() || empresa.isBlank()){
-            throw new Exception("CPF, data de nascimento ou empresa não informado");
+            throw new Exception("CPF, data de nascimento ou empresa não informado.");
         }
         Participante partic = repositorio.localizarParticipante(cpf);
         if (partic != null)
-            throw new Exception("Convidado ja existe");
+            throw new Exception("Convidado ja registrado!");
 
 
         Convidado convidado = new Convidado(cpf, nascimento, empresa);
-        repositorio.adicionar(convidado);
+        repositorio.adicionarParticipante(convidado);
+        repositorio.salvarObjetos();
     }
 
     public static void criarIngresso(Integer id, String cpf, String telefone) throws Exception {
         if (telefone == null || telefone.length() != 9)
-            throw new Exception("O telefone precisa ser válido");
+            throw new Exception("Informe um telefone válido!");
 
         String codigo = id + "-" + cpf;
 
         Participante participante = repositorio.localizarParticipante(cpf);
         Evento evento = repositorio.localizarEvento(id);
         if (evento == null || participante == null){
-            throw new Exception("Evento ou participante não encontrados");
+            throw new Exception("Evento ou participante não encontrado.");
         }
 
         if (evento.lotado()) {
-            throw new Exception("Evento está lotado");
+            throw new Exception("Ingresso não foi criado, pois o evento está lotado.");
         }
 
         if (evento.getIngressos().stream().anyMatch(ingresso -> ingresso.getParticipante().getCpf().equals(cpf))){
-            throw new Exception("Participante já comprou ingreso para evento");
+            throw new Exception("Participante já comprou ingreso para este evento.");
         };
 
         Ingresso ingresso = new Ingresso(codigo, telefone, evento, participante);
         evento.adicionarIngresso(ingresso);
         participante.adicionarIngresso(ingresso);
-        repositorio.adicionar(ingresso);
+        repositorio.adicionarIngresso(ingresso);
+        repositorio.salvarObjetos();
     }
 
     public static void apagarEvento(int id) throws Exception {
         Evento evento = repositorio.localizarEvento(id);
         if (evento == null){
-            throw new Exception("Evento não encontrado");
+            throw new Exception("Evento não foi encontrado.");
         } else if (!evento.getIngressos().isEmpty()){
-            throw new Exception("Evento com ingressos vendidos");
+            throw new Exception("Evento não pode ser apagado, pois tem ingressos vendidos.");
         }
-        repositorio.remover(evento);
+        repositorio.removerEvento(evento);
+        repositorio.salvarObjetos();
     }
 
     public static void apagarParticipante(String cpf) throws Exception {
         Participante participante = repositorio.localizarParticipante(cpf);
-        if (participante == null){
+        if (participante == null) {
             throw new Exception("Participante não encontrado");
         }
-        participante.getIngressos().forEach(ingresso -> {
-            if (LocalDate.parse(ingresso.getEvento().getData()).isAfter(LocalDate.now())){
-                throw new RuntimeException("Participante possui ingressos não expirados");
+
+        List<Ingresso> ingressos = participante.getIngressos();
+
+        for (int i = 0; i < ingressos.size(); i++) {
+            Ingresso ingresso = ingressos.get(i);
+            String dataEventoStr = ingresso.getEvento().getData();
+            
+            if (dataEventoStr != null && !dataEventoStr.isEmpty()) {
+                LocalDate dataEvento = LocalDate.parse(dataEventoStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+                if (dataEvento.isAfter(LocalDate.now())) {
+                    throw new RuntimeException("Participante possui ingressos não expirados.");
+                }
             }
-        });
 
-        participante.getIngressos().forEach(ingresso -> {
             ingresso.getEvento().removerIngresso(ingresso);
-            repositorio.remover(ingresso);
-        });
+            repositorio.removerIngresso(ingresso);
+        }
 
-        repositorio.remover(participante);
+        repositorio.removerParticipante(participante);
+        repositorio.salvarObjetos();
     }
 
     public static void apagarIngresso(String codigo) throws Exception {
@@ -114,18 +129,19 @@ public class Fachada {
         if (ingresso == null){
             throw new Exception("Ingresso não encontrado");
         }
-        repositorio.remover(ingresso);
+        repositorio.removerIngresso(ingresso);
+        repositorio.salvarObjetos();
     }
 
     public static ArrayList<Evento> listarEventos(){
-        return repositorio.listarEventos();
+        return repositorio.getEventos();
     }
 
     public static ArrayList<Participante> listarParticipantes(){
-        return repositorio.listarParticipantes();
+        return repositorio.getParticipantes();
     }
 
     public static ArrayList<Ingresso> listarIngressos(){
-        return repositorio.listarIngressos();
+        return repositorio.getIngressos();
     }
 }
