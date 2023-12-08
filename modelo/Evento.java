@@ -54,22 +54,16 @@ public class Evento {
         return valorTotal;
     }
 
-    public void adicionarIngresso(Ingresso ingresso) throws Exception {
-        if (!lotado()) 
-            ingressos.add(ingresso);
-        else
-            throw new Exception("Não foi possível criar o ingresso, pois o evento está lotado!");
+    public void adicionarIngresso(Ingresso ingresso) {
+        ingressos.add(ingresso);
     }
 
     public void removerIngresso(Ingresso ingresso) {
         ingressos.remove(ingresso);
     }
 
-    public void apagarTodos() throws Exception {
-        if (quantidadeIngressos() != 0)
-            ingressos.clear();
-        else
-            throw new Exception("O evento não possui nenhum ingresso.")
+    public void apagarTodos() {
+        ingressos.clear();
     }
 
     public Ingresso localizarIngresso(String codigo) {
