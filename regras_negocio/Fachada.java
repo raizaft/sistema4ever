@@ -23,6 +23,8 @@ public class Fachada {
             throw new Exception("A data do evento é obrigatória.");
         } else if (descricao == null || descricao.length() == 0){
             throw new Exception("A descrição do evento é obrigatória.");
+        } else if (data.length() != 12) {
+            throw new Exception("Data inválida.");
         }
 
         int id = repositorio.gerarId();
@@ -32,12 +34,15 @@ public class Fachada {
     }
 
     public static void criarParticipante(String cpf, String nascimento) throws Exception {
-        if (cpf.isBlank() || nascimento.isBlank()){
-            throw new Exception("CPF ou data de nascimento não informado.");
-        }
-        Participante partic = repositorio.localizarParticipante(cpf);
+    	Participante partic = repositorio.localizarParticipante(cpf);
         if (partic != null)
             throw new Exception("Participante ja está registrado!");
+        
+        if (cpf.isBlank() || nascimento.isBlank()){
+            throw new Exception("CPF ou data de nascimento não informado.");
+        } else if (nascimento.length() != 12) {
+            throw new Exception("Data de nascimento inválida.");
+        }
 
         Participante participante = new Participante(cpf, nascimento);
         repositorio.adicionarParticipante(participante);

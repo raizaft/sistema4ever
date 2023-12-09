@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Evento;
+import modelo.Participante;
+import modelo.Convidado;
 import regras_negocio.Fachada;
 
 import java.awt.event.ActionListener;
@@ -24,6 +26,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class TelaPrincipal {
 
@@ -33,14 +36,30 @@ public class TelaPrincipal {
     private JLabel label;
 
     private JScrollPane scrollPane;
+    private JScrollPane scrollPane2;
+    private JScrollPane scrollPane3;
+    
     private JTable table;
+    private JTable table2;
+    private JTable table3;
+    
     private JTextField textField;
     private JTextField textField_1;
     private JTextField textField_2;
     private JTextField textField_3;
+    private JTextField textField_4;
+    private JTextField textField_5;
+    private JTextField textField_6;
+    
     private JLabel label_1;
     private JLabel label_2;
     private JLabel label_3;
+    private JLabel label_4;
+    private JLabel label_5;
+    private JLabel label_6;
+    private JLabel label_7;
+    private JLabel label_8;
+    
     private JButton button;
     private JButton button_1;
     private JButton button_2;
@@ -49,7 +68,9 @@ public class TelaPrincipal {
     private JButton button_5;
     private JButton button_6;
     private JButton button_7;
-    private JLabel label_4;
+    private JButton button_8;
+    private JButton button_9;
+    private JButton button_10;
 
 	/**
 	 * Launch the application.
@@ -101,7 +122,7 @@ public class TelaPrincipal {
 
 		JPanel telaParticipantes = new JPanel();
 		telaParticipantes.setLayout(null);
-		// Adicione os componentes relevantes para a tela de participantes aqui...
+        setupTelaParticipantes(telaParticipantes);
 
 		JPanel telaIngressos = new JPanel();
 		telaIngressos.setLayout(null);
@@ -154,7 +175,7 @@ public class TelaPrincipal {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				listagem();
+				listagemEventos();
 			}
 		});
         scrollPane = new JScrollPane();
@@ -172,6 +193,7 @@ public class TelaPrincipal {
 		textField.setColumns(10);
 		
 		label = new JLabel("Data");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		label.setBounds(480, 11, 46, 14);
 		telaEventos.add(label);
 		
@@ -181,6 +203,7 @@ public class TelaPrincipal {
 		telaEventos.add(textField_1);
 		
 		label_1 = new JLabel("Descrição");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		label_1.setBounds(480, 58, 46, 14);
 		telaEventos.add(label_1);
 		
@@ -190,6 +213,7 @@ public class TelaPrincipal {
 		telaEventos.add(textField_2);
 		
 		label_2 = new JLabel("Capacidade");
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		label_2.setBounds(480, 105, 86, 14);
 		telaEventos.add(label_2);
 		
@@ -199,30 +223,160 @@ public class TelaPrincipal {
 		telaEventos.add(textField_3);
 		
 		label_3 = new JLabel("Preço");
+		label_3.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		label_3.setBounds(480, 152, 86, 14);
 		telaEventos.add(label_3);
         
         button_4 = new JButton("Criar Evento");
         button_4.setBounds(480, 199, 123, 23);
+        button_4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String data = textField.getText();
+                String descricao = textField_1.getText();
+                int capacidade = Integer.parseInt(textField_2.getText());
+                double preco = Double.parseDouble(textField_3.getText());
+
+                try {
+					Fachada.criarEvento(data, descricao, capacidade, preco);
+				} catch (Exception e1) {
+					label_4.setText(e1.getMessage());
+				}
+
+                textField.setText("");
+                textField_1.setText("");
+                textField_2.setText("");
+                textField_3.setText("");
+
+                listagemEventos();
+            }
+        });
         telaEventos.add(button_4);
 
-        button_5 = new JButton("Excluir Evento");
+        button_5 = new JButton("Excluir");
+        button_5.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
         button_5.setBounds(480, 233, 123, 23);
         telaEventos.add(button_5);
 
-        button_6 = new JButton("Ver Ingressos");
+        button_6 = new JButton("Ver Ingresso");
+        button_6.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
         button_6.setBounds(347, 233, 123, 23);
         telaEventos.add(button_6);
 
-        label_4 = new JLabel("tem um label aqui");
-        label_4.setBounds(10, 233, 194, 23);
+        label_4 = new JLabel("");
+        label_4.setBounds(10, 233, 324, 23);
         telaEventos.add(label_4);
     }
 	
-	public void listagem() {
+	private void setupTelaParticipantes(JPanel telaParticipantes) {
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				listagemParticipantes();
+			}
+		});
+		scrollPane2 = new JScrollPane();
+        scrollPane2.setBounds(10, 11, 460, 211);
+        telaParticipantes.add(scrollPane2);
+
+        table2 = new JTable();
+        scrollPane2.setViewportView(table2);
+        table2.setModel(new DefaultTableModel(new Object[][] {}, new String[] 
+        		{ "CPF", "Nascimento", "Idade", "Empresa"}));
+        
+        textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(480, 27, 123, 20);
+		telaParticipantes.add(textField_4);
+		
+		label_5 = new JLabel("CPF");
+		label_5.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_5.setBounds(480, 11, 46, 14);
+		telaParticipantes.add(label_5);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		textField_5.setBounds(480, 74, 123, 20);
+		telaParticipantes.add(textField_5);
+		
+		label_6 = new JLabel("Nascimento");
+		label_6.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_6.setBounds(480, 58, 86, 14);
+		telaParticipantes.add(label_6);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(480, 121, 123, 20);
+		telaParticipantes.add(textField_6);
+		
+		label_7 = new JLabel("Empresa");
+		label_7.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_7.setBounds(480, 105, 86, 14);
+		telaParticipantes.add(label_7);
+        
+        button_7 = new JButton("Criar");
+        button_7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String cpf = textField_4.getText();
+                String nascimento = textField_5.getText();
+                String empresa = textField_6.getText();
+
+                try {
+                	if (empresa == null || empresa.trim().isEmpty()) {
+                		Fachada.criarParticipante(cpf, nascimento);
+                	} else {
+                		Fachada.criarConvidado(cpf, nascimento, empresa);
+                	}
+				} catch (Exception e1) {
+					label_8.setText(e1.getMessage());
+				}
+
+                textField_4.setText("");
+                textField_5.setText("");
+                textField_6.setText("");
+
+                listagemParticipantes();
+            }
+        });
+        button_7.setBounds(480, 165, 123, 23);
+        telaParticipantes.add(button_7);
+        
+        button_8 = new JButton("Limpar");
+        button_8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textField_4.setText(null);
+                textField_5.setText(null);
+                textField_6.setText(null);
+            }
+        });
+        button_8.setBounds(480, 199, 123, 23);
+        telaParticipantes.add(button_8);
+
+        button_9 = new JButton("Excluir");
+        button_9.setBounds(480, 233, 123, 23);
+        telaParticipantes.add(button_9);
+        
+        button_10 = new JButton("Ver Participante");
+        button_10.setBounds(335, 233, 135, 23);
+        telaParticipantes.add(button_10);
+        
+        label_8 = new JLabel("");
+        label_8.setBounds(10, 233, 315, 23);
+        telaParticipantes.add(label_8);
+	}
+	
+	public void listagemEventos() {
 		try {
 			List<Evento> lista = Fachada.listarEventos();
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			model.setRowCount(0);
 			String lotado = "";
 			
 			for (Evento ev : lista) {
@@ -252,6 +406,40 @@ public class TelaPrincipal {
 
 	        for (int i = 0; i < table.getColumnCount(); i++) {
 	            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+	        }
+		} catch(Exception erro){
+			erro.getMessage();
+		}
+	}
+	
+	public void listagemParticipantes() {
+		try {
+			List<Participante> lista = Fachada.listarParticipantes();
+			DefaultTableModel model = (DefaultTableModel) table2.getModel();
+			model.setRowCount(0);
+			
+			for (Participante p : lista) {
+				if (p instanceof Convidado c)
+					model.addRow(new Object[]{
+							p.getCpf(),
+							p.getNascimento(),
+							p.calcularIdade(),
+							c.getEmpresa()
+							});
+				else
+					model.addRow(new Object[]{
+							p.getCpf(),
+							p.getNascimento(),
+							p.calcularIdade(),
+							""
+							});
+			}
+			
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+
+	        for (int i = 0; i < table2.getColumnCount(); i++) {
+	            table2.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 	        }
 		} catch(Exception erro){
 			erro.getMessage();
