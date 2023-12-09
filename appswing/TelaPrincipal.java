@@ -231,6 +231,16 @@ public class TelaPrincipal {
         button_4.setBounds(480, 199, 123, 23);
         button_4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
+            	try {
+            		if (textField.getText().isEmpty() || textField_1.getText().isEmpty()
+            				|| textField_2.getText().isEmpty()
+            				|| textField_3.getText().isEmpty()) {
+                		throw new Exception ("Preencha todos os campos.");
+                	}
+            	} catch (Exception e5) {
+            		label_4.setText(e5.getMessage());
+            	}
 
                 String data = textField.getText();
                 String descricao = textField_1.getText();
@@ -239,8 +249,8 @@ public class TelaPrincipal {
 
                 try {
 					Fachada.criarEvento(data, descricao, capacidade, preco);
-				} catch (Exception e1) {
-					label_4.setText(e1.getMessage());
+				} catch (Exception e10) {
+					label_4.setText(e10.getMessage());
 				}
 
                 textField.setText("");
@@ -256,15 +266,37 @@ public class TelaPrincipal {
         button_5 = new JButton("Excluir");
         button_5.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		try {
+                    if (table.getSelectedRow() >= 0) {
+                        Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
+                        Fachada.apagarEvento(id);
+                    } else {
+                        label_4.setText("Selecione um evento.");
+                    }
+                } catch (Exception erro) {
+                    label_4.setText(erro.getMessage());
+                }
+        		listagemEventos();
         	}
         });
         button_5.setBounds(480, 233, 123, 23);
         telaEventos.add(button_5);
 
-        button_6 = new JButton("Ver Ingresso");
+        button_6 = new JButton("Ver Ingressos");
         button_6.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (table.getSelectedRow() >= 0) {
+                        Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
+                        VerIngressos tela = new VerIngressos(id);
+                        tela.setVisible(true);
+                    } else {
+                        label_4.setText("Selecione um evento.");
+                    }
+                } catch (Exception erro) {
+                    label_4.setText(erro.getMessage());
+                }
+            }
         });
         button_6.setBounds(347, 233, 123, 23);
         telaEventos.add(button_6);
@@ -361,9 +393,39 @@ public class TelaPrincipal {
 
         button_9 = new JButton("Excluir");
         button_9.setBounds(480, 233, 123, 23);
+        button_9.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+                    if (table2.getSelectedRow() >= 0) {
+                        String cpf = (String) table2.getValueAt(table2.getSelectedRow(), 0);
+                        Fachada.apagarParticipante(cpf);
+                    } else {
+                        label_8.setText("Selecione um evento.");
+                    }
+                } catch (Exception erro) {
+                    label_8.setText(erro.getMessage());
+                }
+        		listagemParticipantes();
+        	}
+        });
         telaParticipantes.add(button_9);
         
         button_10 = new JButton("Ver Participante");
+        button_10.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (table2.getSelectedRow() >= 0) {
+                        String cpf = (String) table2.getValueAt(table2.getSelectedRow(), 0);
+                        VerParticipante tela2 = new VerParticipante(cpf);
+                        tela2.setVisible(true);
+                    } else {
+                        label_8.setText("Selecione um participante.");
+                    }
+                } catch (Exception erro) {
+                    label_8.setText(erro.getMessage());
+                }
+            }
+        });
         button_10.setBounds(335, 233, 135, 23);
         telaParticipantes.add(button_10);
         

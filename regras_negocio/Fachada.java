@@ -23,7 +23,7 @@ public class Fachada {
             throw new Exception("A data do evento é obrigatória.");
         } else if (descricao == null || descricao.length() == 0){
             throw new Exception("A descrição do evento é obrigatória.");
-        } else if (data.length() != 12) {
+        } else if (data.length() != 10) {
             throw new Exception("Data inválida.");
         }
 
@@ -95,7 +95,7 @@ public class Fachada {
         if (evento == null){
             throw new Exception("Evento não foi encontrado.");
         } else if (!evento.getIngressos().isEmpty()){
-            throw new Exception("Evento não pode ser apagado, pois tem ingressos vendidos.");
+            throw new Exception("Evento possui ingressos vendidos.");
         }
         repositorio.removerEvento(evento);
         repositorio.salvarObjetos();
@@ -148,5 +148,41 @@ public class Fachada {
 
     public static ArrayList<Ingresso> listarIngressos(){
         return repositorio.getIngressos();
+    }
+    
+    public static ArrayList<Ingresso> listarIngressosEvento(int codigoEvento) {
+        ArrayList<Ingresso> ingressosDoEvento = new ArrayList<>();
+
+        try {
+            ArrayList<Ingresso> todosIngressos = repositorio.getIngressos();
+
+            for (Ingresso ingresso : todosIngressos) {
+                if (ingresso.getEvento().getId() == codigoEvento) {
+                    ingressosDoEvento.add(ingresso);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ingressosDoEvento;
+    }
+    
+    public static ArrayList<Ingresso> listarIngressosParticipante(String cpf) {
+        ArrayList<Ingresso> ingressosParticipante = new ArrayList<>();
+
+        try {
+            ArrayList<Ingresso> todosIngressos = repositorio.getIngressos();
+
+            for (Ingresso ingresso : todosIngressos) {
+                if (ingresso.getParticipante().getCpf() == cpf) {
+                    ingressosParticipante.add(ingresso);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ingressosParticipante;
     }
 }
