@@ -77,14 +77,19 @@ public class Repositorio {
 
 	public void removerParticipante(Participante p) {
 		participantes.remove(p);
-		List<Ingresso> ingressosParaRemover = ingressos.stream().filter(ingresso -> ingresso.getParticipante().equals(p)).toList();
-
-		ingressosParaRemover.forEach(ingresso -> {
+		
+		List<Ingresso> ingressosParaRemover = new ArrayList <>();
+		
+		for(Ingresso ingresso: ingressos) {
+			if(ingresso.getParticipante().equals(p)) {
+				ingressosParaRemover.add(ingresso);
+			}
+		}
+		
+		for(Ingresso ingresso: ingressosParaRemover) {
 			ingresso.getEvento().getIngressos().remove(ingresso);
 			ingresso.getParticipante().getIngressos().remove(ingresso);
-		});
-		
-		ingressos.removeAll(ingressosParaRemover);
+		}
 	}
 	
 	public Participante localizarParticipante (String cpf) {

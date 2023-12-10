@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Ingresso;
 import regras_negocio.Fachada;
+import java.awt.event.ActionListener;
 
 public class VerParticipante extends JDialog {
 
@@ -63,6 +64,12 @@ public class VerParticipante extends JDialog {
         table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Código", "Telefone" }));
 
         JButton okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener() {
+        });
+        okButton.addActionListener(new ActionListener() {
+        });
+        okButton.addActionListener(new ActionListener() {
+        });
         okButton.addActionListener(e -> dispose());
         okButton.setActionCommand("OK");
         okButton.setBounds(335, 214, 89, 23);

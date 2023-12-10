@@ -79,7 +79,6 @@ public class Fachada {
             throw new Exception("Ingresso não foi criado, pois o evento está lotado.");
         }
 
-
         if (evento.getIngressos().stream().anyMatch(ingresso -> ingresso.getParticipante().getCpf().equals(cpf))){
             throw new Exception("Participante já comprou ingreso para este evento.");
         };
