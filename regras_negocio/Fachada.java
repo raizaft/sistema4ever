@@ -40,7 +40,7 @@ public class Fachada {
 
         if (cpf.isBlank() || nascimento.isBlank()){
             throw new Exception("CPF ou data de nascimento não informado.");
-        } else if (nascimento.length() != 12) {
+        } else if (nascimento.length() != 10) {
             throw new Exception("Data de nascimento inválida.");
         }
 
@@ -117,7 +117,7 @@ public class Fachada {
                 LocalDate dataEvento = LocalDate.parse(dataEventoStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 if (dataEvento.isAfter(LocalDate.now())) {
-                    throw new RuntimeException("Participante possui ingressos não expirados.");
+                    throw new  Exception("Participante possui ingressos não expirados.");
                 }
             }
 

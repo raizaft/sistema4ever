@@ -90,6 +90,8 @@ public class Repositorio {
 			ingresso.getEvento().getIngressos().remove(ingresso);
 			ingresso.getParticipante().getIngressos().remove(ingresso);
 		}
+		
+		ingressos.removeAll(ingressosParaRemover);
 	}
 	
 	public Participante localizarParticipante (String cpf) {
