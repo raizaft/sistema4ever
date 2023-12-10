@@ -1,6 +1,6 @@
 package modelo;
 
-public class Convidado extends Participante{
+public class Convidado extends Participante {
 
     private String empresa;
 

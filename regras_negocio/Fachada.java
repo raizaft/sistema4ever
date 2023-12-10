@@ -25,7 +25,7 @@ public class Fachada {
         }
 
         int id = repositorio.gerarId();
-        Evento evento = new Evento(id, data, descricao, capacidade, preco);  // data e descrição obrigatoria?
+        Evento evento = new Evento(id, data, descricao, capacidade, preco); 
         repositorio.adicionar(evento);
     }
 
@@ -69,7 +69,8 @@ public class Fachada {
         if (evento.lotado()) {
             throw new Exception("Evento está lotado");
         }
-
+        
+        
         if (evento.getIngressos().stream().anyMatch(ingresso -> ingresso.getParticipante().getCpf().equals(cpf))){
             throw new Exception("Participante já comprou ingreso para evento");
         };
