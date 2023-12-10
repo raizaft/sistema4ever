@@ -40,15 +40,12 @@ public class Participante {
 
     public void adicionarIngresso(Ingresso ingresso) {
         ingressos.add(ingresso);
-
     }
 
     @Override
     public String toString() {
-        return "Participante{" +
-                "cpf='" + cpf + '\'' +
-                ", nascimento='" + nascimento + '\'' +
-                ", ingressos=" + ingressos.size() +
-                '}';
+        return  "CPF: " + cpf +
+                " | Nascimento: " + nascimento +
+                " | Ingressos: " + ingressos.size();
     }
 }
