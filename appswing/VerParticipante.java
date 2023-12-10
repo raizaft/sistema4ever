@@ -1,21 +1,12 @@
 package appswing;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
 import modelo.Ingresso;
 import regras_negocio.Fachada;
-import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class VerParticipante extends JDialog {
 
@@ -29,18 +20,14 @@ public class VerParticipante extends JDialog {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    TelaPrincipal window = new TelaPrincipal();
-                    window.frame.setVisible(true);
-                    String cpf = "";
-                    VerParticipante dialog = new VerParticipante(cpf);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
-                } catch (Exception e11) {
-                    e11.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                String cpf = "";
+                VerParticipante dialog = new VerParticipante(cpf);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+            } catch (Exception e11) {
+                e11.printStackTrace();
             }
         });
     }
@@ -64,12 +51,6 @@ public class VerParticipante extends JDialog {
         table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Código", "Telefone" }));
 
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener() {
-        });
-        okButton.addActionListener(new ActionListener() {
-        });
-        okButton.addActionListener(new ActionListener() {
-        });
         okButton.addActionListener(e -> dispose());
         okButton.setActionCommand("OK");
         okButton.setBounds(335, 214, 89, 23);

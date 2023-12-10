@@ -1,17 +1,12 @@
 package appswing;
 
-import java.awt.EventQueue;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import modelo.Ingresso;
 import regras_negocio.Fachada;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class VerIngressos extends JDialog {
 
@@ -19,25 +14,21 @@ public class VerIngressos extends JDialog {
     private final JPanel contentPanel = new JPanel();
     private JTable table;
     private JScrollPane scrollPane;
-    
+
     private int idEvento;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    TelaPrincipal window = new TelaPrincipal();
-                    window.frame.setVisible(true);
-                    int idEvento = 1;
-                    VerIngressos dialog = new VerIngressos(idEvento);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                int idEvento = 1;
+                VerIngressos dialog = new VerIngressos(idEvento);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+            } catch (Exception e3) {
+                e3.printStackTrace();
             }
         });
     }
@@ -47,7 +38,7 @@ public class VerIngressos extends JDialog {
      */
     public VerIngressos(int id) {
         this.idEvento = id;
-        
+
         setTitle("Ingressos");
         setBounds(100, 100, 450, 285);
         getContentPane().setLayout(null);
@@ -58,7 +49,7 @@ public class VerIngressos extends JDialog {
 
         table = new JTable();
         scrollPane.setViewportView(table);
-        table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Código", "Telefone" }));
+        table.setModel(new DefaultTableModel(new Object[][]{}, new String[]{"Código", "Telefone"}));
 
         JButton okButton = new JButton("OK");
         okButton.addActionListener(e -> dispose());
@@ -67,9 +58,10 @@ public class VerIngressos extends JDialog {
         getContentPane().add(okButton);
 
         try {
-			carregarIngressosEvento(idEvento);
-		} catch (Exception e2) {
-			e2.getMessage();		}
+            carregarIngressosEvento(idEvento);
+        } catch (Exception e2) {
+            e2.getMessage();
+        }
     }
 
     private void carregarIngressosEvento(int codigoEvento) throws Exception {
@@ -83,7 +75,7 @@ public class VerIngressos extends JDialog {
                 throw new Exception("O evento não possui ingressos.");
             } else {
                 for (Ingresso ingresso : ingressos) {
-                    model.addRow(new Object[] { ingresso.getCodigo(), ingresso.getTelefone() });
+                    model.addRow(new Object[]{ingresso.getCodigo(), ingresso.getTelefone()});
                 }
             }
         } catch (Exception even) {
