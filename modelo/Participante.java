@@ -41,6 +41,10 @@ public class Participante {
     public void adicionarIngresso(Ingresso ingresso) {
         ingressos.add(ingresso);
     }
+    
+    public void removerIngresso(Ingresso ingresso) {
+        ingressos.remove(ingresso);
+    }
 
     @Override
     public String toString() {

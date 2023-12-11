@@ -132,8 +132,18 @@ public class Fachada {
     public static void apagarIngresso(String codigo) throws Exception {
         Ingresso ingresso = repositorio.localizarIngresso(codigo);
         if (ingresso == null){
-            throw new Exception("Ingresso não encontrado");
+            throw new Exception("Ingresso não encontrado.");
         }
+        
+        String partes[] = codigo.split("-");
+        int id = Integer.parseInt(partes[0]);
+        String cpf = partes[1];
+        
+        Participante participante = repositorio.localizarParticipante(cpf);
+        Evento evento = repositorio.localizarEvento(id);
+        
+        evento.removerIngresso(ingresso);
+        participante.removerIngresso(ingresso);
         repositorio.removerIngresso(ingresso);
         repositorio.salvarObjetos();
     }

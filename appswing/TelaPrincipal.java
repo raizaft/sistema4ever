@@ -1,19 +1,33 @@
 package appswing;
 
-import modelo.Convidado;
-import modelo.Evento;
-import modelo.Participante;
-import regras_negocio.Fachada;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.EventQueue;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
+
+import modelo.Evento;
+import modelo.Ingresso;
+import modelo.Participante;
+import modelo.Convidado;
+import regras_negocio.Fachada;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class TelaPrincipal {
 
@@ -37,6 +51,9 @@ public class TelaPrincipal {
     private JTextField textField_4;
     private JTextField textField_5;
     private JTextField textField_6;
+    private JTextField textField10;
+    private JTextField textField11;
+    private JTextField textField12;
     
     private JLabel label_1;
     private JLabel label_2;
@@ -46,6 +63,10 @@ public class TelaPrincipal {
     private JLabel label_6;
     private JLabel label_7;
     private JLabel label_8;
+    private JLabel label_9;
+    private JLabel label_10;
+    private JLabel label_11;
+    private JLabel label_12;
     
     private JButton button;
     private JButton button_1;
@@ -58,6 +79,9 @@ public class TelaPrincipal {
     private JButton button_8;
     private JButton button_9;
     private JButton button_10;
+    private JButton button_15;
+    private JButton button_16;
+    private JButton button_17;
 
 	/**
 	 * Launch the application.
@@ -113,7 +137,7 @@ public class TelaPrincipal {
 
 		JPanel telaIngressos = new JPanel();
 		telaIngressos.setLayout(null);
-		// Adicione os componentes relevantes para a tela de ingressos aqui...
+		setupTelaIngressos(telaIngressos);
 
 		cardPanel.add(telaHome, "telaHome");
 		cardPanel.add(telaEventos, "telaEventos");
@@ -421,6 +445,121 @@ public class TelaPrincipal {
         telaParticipantes.add(label_8);
 	}
 	
+	private void setupTelaIngressos(JPanel telaIngressos) {
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				listagemIngressos();
+			}
+		});
+        scrollPane3 = new JScrollPane();
+        scrollPane3.setBounds(10, 11, 460, 211);
+        telaIngressos.add(scrollPane3);
+
+        table3 = new JTable();
+        scrollPane3.setViewportView(table3);
+        table3.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Código", "Telefone",
+        		"Preço do Ingresso", "Preço do Evento", "Data", "Idade"}));
+        
+        textField10 = new JTextField();
+		textField10.setBounds(480, 27, 123, 20);
+		telaIngressos.add(textField10);
+		textField10.setColumns(10);
+		
+		label_9 = new JLabel("ID do Evento");
+		label_9.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_9.setBounds(480, 11, 123, 14);
+		telaIngressos.add(label_9);
+		
+		textField11 = new JTextField();
+		textField11.setColumns(10);
+		textField11.setBounds(480, 74, 123, 20);
+		telaIngressos.add(textField11);
+		
+		label_10 = new JLabel("CPF");
+		label_10.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_10.setBounds(480, 58, 46, 14);
+		telaIngressos.add(label_10);
+		
+		textField12 = new JTextField();
+		textField12.setColumns(10);
+		textField12.setBounds(480, 121, 123, 20);
+		telaIngressos.add(textField12);
+		
+		label_11 = new JLabel("Telefone");
+		label_11.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label_11.setBounds(480, 105, 86, 14);
+		telaIngressos.add(label_11);
+        
+        button_15 = new JButton("Criar Ingresso");
+        button_15.setBounds(480, 165, 123, 23);
+        button_15.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+            	try {
+            		if (textField10.getText().isEmpty() || textField11.getText().isEmpty()
+            				|| textField12.getText().isEmpty()) {
+                		throw new Exception ("Preencha todos os campos.");
+                	}
+            	} catch (Exception e5) {
+            		label_12.setText(e5.getMessage());
+            	}
+
+                int id = Integer.parseInt(textField10.getText());
+                String cpf = textField11.getText();
+                String telefone = textField12.getText();
+
+                try {
+					Fachada.criarIngresso(id, cpf, telefone);
+				} catch (Exception e10) {
+					label_12.setText(e10.getMessage());
+				}
+
+                textField10.setText("");
+                textField11.setText("");
+                textField12.setText("");
+                
+                listagemIngressos();
+            }
+        });
+        telaIngressos.add(button_15);
+
+        button_16 = new JButton("Excluir");
+        button_16.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+                    if (table3.getSelectedRow() >= 0) {
+                        String codigo = (String) table3.getValueAt(table3.getSelectedRow(), 0);
+                        Fachada.apagarIngresso(codigo);
+                    } else {
+                        label_12.setText("Selecione um ingresso.");
+                    }
+                } catch (Exception erro) {
+                    label_12.setText(erro.getMessage());
+                }
+        		listagemIngressos();
+        		listagemEventos();
+        	}
+        });
+        button_16.setBounds(480, 233, 123, 23);
+        telaIngressos.add(button_16);
+        
+        button_17 = new JButton("Limpar");
+        button_17.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textField10.setText(null);
+                textField11.setText(null);
+                textField12.setText(null);
+            }
+        });
+        button_17.setBounds(480, 199, 123, 23);
+        telaIngressos.add(button_17);
+
+        label_12 = new JLabel("");
+        label_12.setBounds(10, 233, 460, 23);
+        telaIngressos.add(label_12);
+    }
+	
 	public void listagemEventos() {
 		try {
 			List<Evento> lista = Fachada.listarEventos();
@@ -489,6 +628,44 @@ public class TelaPrincipal {
 
 	        for (int i = 0; i < table2.getColumnCount(); i++) {
 	            table2.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+	        }
+		} catch(Exception erro){
+			erro.getMessage();
+		}
+	}
+	
+	public void listagemIngressos() {
+		try {
+			List<Ingresso> lista = Fachada.listarIngressos();
+			DefaultTableModel model = (DefaultTableModel) table3.getModel();
+			model.setRowCount(0);
+			
+			for (Ingresso i : lista) {
+				Evento ev = i.getEvento();
+				Participante p = i.getParticipante();
+				
+				model.addRow(new Object[]{
+						i.getCodigo(),
+						i.getTelefone(),
+						i.calcularValor(),
+						ev.getPreco(),
+						ev.getData(),
+						p.calcularIdade()
+						});
+			}
+			
+			table3.getColumnModel().getColumn(0).setMaxWidth(70);	
+			table3.getColumnModel().getColumn(1).setMaxWidth(80);
+			table3.getColumnModel().getColumn(2).setMaxWidth(100);
+			table3.getColumnModel().getColumn(3).setMaxWidth(100);
+			table3.getColumnModel().getColumn(4).setMaxWidth(80);
+			table3.getColumnModel().getColumn(5).setMaxWidth(50);
+			
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+
+	        for (int i = 0; i < table3.getColumnCount(); i++) {
+	            table3.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 	        }
 		} catch(Exception erro){
 			erro.getMessage();
