@@ -123,7 +123,7 @@ public class TelaPrincipal {
 		JPanel telaHome = new JPanel();
 		telaHome.setLayout(null);
 		label = new JLabel("");
-		label.setIcon(new ImageIcon("D:\\IFPB\\P3\\POO\\logo\\logo3.png"));
+		label.setIcon(new ImageIcon(".\\img\\logo3.png"));
 		label.setBounds(0, 0, 612, 268);
 		telaHome.add(label);
 
